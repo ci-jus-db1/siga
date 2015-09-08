@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.NonUniqueObjectException;
 import org.hibernate.exception.ConstraintViolationException;
+import org.hibernate.validator.util.Contracts;
 
 import br.com.caelum.vraptor.Path;
 import br.com.caelum.vraptor.Resource;
@@ -75,12 +76,11 @@ public class PermissaoController extends PpController {
 				UsuarioForum usuarioPermitido = new UsuarioForum(matricula_permitida, nome_permitido, atribForum);
 				try {
 				    if(objUsuario.equals(usuarioPermitido))
-				        mensagem = "Usuario ja tinha permissao.";
-				    else {
-    					ContextoPersistencia.em().persist(usuarioPermitido);
-    					ContextoPersistencia.em().flush();
-    					mensagem = "Ok.";
-					}
+				        throw new Exception("org.hibernate.exception.ConstraintViolationException");
+				    
+					ContextoPersistencia.em().persist(usuarioPermitido);
+					ContextoPersistencia.em().flush();
+					mensagem = "Ok.";
 				} catch (Exception e) {
 				    e.printStackTrace();
 				    if (e.getMessage().contains("a different object with the same identifier value was already associated with the session") || e.getMessage().contains("Could not execute JDBC batch update")
